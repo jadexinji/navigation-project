@@ -1,89 +1,104 @@
 # C++ Map Navigation System
 
-## 项目简介
-这是一个基于 C++ 的简易地图导航系统，实现了地图显示、缩放/平移、起终点选择，以及基于 **Dijkstra** 和 **A*** 算法的路径规划和可视化功能。适合作为实习项目展示算法与地图渲染的能力。
+一个基于 C++ 的地图导航演示项目，使用 CSV 道路数据构建加权图，并实现 Dijkstra 与 A* 两种最短路径算法。项目同时提供命令行版本、SVG 路线预览和可交互的浏览器地图界面。
 
----
+## 功能特点
 
-## 功能说明
-1. **地图加载**
-   - 支持 CSV 或 Shapefile 简化地图数据
-   - 节点信息：`nodes.csv`（点编号, x, y）
-   - 边信息：`edges.csv`（起点编号, 终点编号, 距离）
+- 使用 `nodes.csv` 和 `edges.csv` 加载路口与道路数据
+- 基于邻接表构建双向加权图
+- 支持 Dijkstra 最短路径算法
+- 支持 A* 启发式搜索算法，启发函数为欧几里得距离
+- 支持将路径结果导出为 CSV 和 JSON
+- 支持生成带路线高亮的 SVG 地图预览
+- 提供浏览器交互界面，可点击选择起点和终点
 
-2. **地图显示**
-   - 使用 WinForms 或 GDI+ 绘制节点与道路
-   - 支持鼠标缩放与平移
+## 项目结构
 
-3. **起终点选择**
-   - 鼠标点击选择起点和终点
-   - 支持框选和单点选
-
-4. **路径规划**
-   - **Dijkstra 算法**：求最短路径
-   - **A\*** 算法：启发式路径规划
-   - 高亮显示规划路径
-
-5. **属性/数据管理**
-   - 可查看每条边的距离
-   - 支持将规划结果输出为 CSV 或 JSON
-
----
-
-## 目录结构
-
-```
+```text
 NavigationProject/
-│
-├─ MainForm.h / MainForm.cpp        # 主窗体，UI & 事件处理
-├─ Graph.h / Graph.cpp              # 图数据结构 + Dijkstra/A* 算法
-├─ MapRenderer.h / MapRenderer.cpp  # 绘图与缩放平移
-├─ DataLoader.h / DataLoader.cpp    # CSV / Shapefile 数据读取
-├─ resources/                       # 测试地图文件 (CSV/Shapefile)
-└─ README.md                        # 项目说明文档
+├─ include/              # 头文件
+├─ src/                  # C++ 源码
+├─ resources/            # CSV 地图数据
+├─ ui/                   # 浏览器交互地图界面
+├─ docs/                 # README 展示图
+├─ CMakeLists.txt
+└─ README.md
 ```
 
----
+## 运行 C++ 版本
 
-## Codex 开发任务说明
+进入项目目录：
 
-1. **读取数据**
-   - 使用 `DataLoader` 读取节点和边信息
-   - 建立邻接表/邻接矩阵
+```bash
+cd NavigationProject
+```
 
-2. **绘制地图**
-   - 在 `MapRenderer` 中绘制节点和边
-   - 支持鼠标缩放和平移
+使用 CMake：
 
-3. **路径规划**
-   - 实现 Dijkstra 算法
-   - 实现 A* 算法（启发式函数使用欧几里得距离）
-   - 高亮显示计算出的最短路径
+```bash
+cmake -S . -B build
+cmake --build build
+./build/navigate
+```
 
-4. **UI 交互**
-   - 鼠标选择起点和终点
-   - 显示路径长度和经过节点
+如果没有安装 CMake，也可以直接用 clang 编译：
 
-5. **输出**
-   - 将路径结果保存为 CSV 或 JSON，便于查看或进一步分析
+```bash
+clang++ -std=c++17 -Iinclude src/main.cpp src/DataLoader.cpp src/Graph.cpp src/MapRenderer.cpp -o navigate
+./navigate
+```
 
----
+可指定起点和终点：
 
-## 使用说明
-1. 打开 VS2022 或 VS Code（带 C++/CLI 或 WinForms 支持）  
-2. 编译并运行 `MainForm`  
-3. 导入 `nodes.csv` 和 `edges.csv`  
-4. 鼠标选择起点/终点 → 点击“计算路径” → 查看高亮路径  
+```bash
+./navigate resources/nodes.csv resources/edges.csv 1 24
+```
 
----
+交互式命令行模式：
 
-## 扩展建议
-- 支持地图缩放到不同级别  
-- 支持多条路径比较  
-- 支持动态道路权重（交通、障碍物等）  
+```bash
+./navigate --interactive
+```
 
----
+## 交互地图界面
 
-## 作者
-- 实习项目示例  
-- 使用 Codex 辅助开发
+![Interactive map preview](NavigationProject/docs/map-ui-screenshot.svg)
+
+在 `NavigationProject` 目录下启动本地预览服务：
+
+```bash
+python3 -m http.server 4173
+```
+
+然后在浏览器打开：
+
+```text
+http://localhost:4173/ui/index.html
+```
+
+交互界面支持点击选择起点和终点、切换 Dijkstra/A* 算法，并导出当前路线为 CSV、JSON 或 SVG。
+
+## 数据格式
+
+`resources/nodes.csv`
+
+```csv
+id,x,y
+1,60,70
+2,150,62
+```
+
+`resources/edges.csv`
+
+```csv
+from,to,distance
+1,2,92
+2,3,106
+```
+
+## 后续扩展
+
+- 接入真实地图数据，如 OpenStreetMap
+- 增加道路名称、限速、拥堵权重等属性
+- 支持最短距离和最快时间两种路线策略
+- 增加算法访问节点数与耗时对比
