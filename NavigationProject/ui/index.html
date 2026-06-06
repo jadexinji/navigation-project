@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Navigation Map</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="map-area" aria-label="Interactive road map">
+      <div class="map-toolbar">
+        <h1>Navigation Map</h1>
+        <div class="segmented" role="group" aria-label="Algorithm">
+          <button class="segment is-active" type="button" data-algorithm="astar">A*</button>
+          <button class="segment" type="button" data-algorithm="dijkstra">Dijkstra</button>
+        </div>
+      </div>
+      <svg id="map" class="map" viewBox="0 0 720 520" role="img" aria-label="Road network map"></svg>
+    </section>
+
+    <aside class="route-panel" aria-label="Route details">
+      <div class="field">
+        <label for="startSelect">Start</label>
+        <select id="startSelect"></select>
+      </div>
+      <div class="field">
+        <label for="goalSelect">Destination</label>
+        <select id="goalSelect"></select>
+      </div>
+
+      <div class="summary">
+        <span>Distance</span>
+        <strong id="distanceValue">0</strong>
+      </div>
+
+      <div class="route-list">
+        <h2>Route</h2>
+        <ol id="routeNodes"></ol>
+      </div>
+
+      <div class="export-actions" aria-label="Export route">
+        <button class="secondary-action" type="button" data-export="csv">Export CSV</button>
+        <button class="secondary-action" type="button" data-export="json">Export JSON</button>
+        <button class="secondary-action" type="button" data-export="svg">Export SVG</button>
+      </div>
+
+      <button id="resetButton" class="primary-action" type="button">Reset Route</button>
+    </aside>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

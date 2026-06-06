@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="620" viewBox="0 0 1000 620">
+  <rect width="1000" height="620" fill="#dfe7e6"/>
+  <rect x="24" y="22" width="700" height="576" rx="8" fill="#eef2ee" stroke="#b8c2cc"/>
+  <rect x="748" y="0" width="252" height="620" fill="#ffffff"/>
+  <line x1="748" y1="0" x2="748" y2="620" stroke="#b8c2cc"/>
+  <text x="40" y="58" fill="#172033" font-family="Arial" font-size="26" font-weight="700">Navigation Map</text>
+  <rect x="548" y="28" width="152" height="38" rx="8" fill="#f8fafc" stroke="#a9b5c4"/>
+  <rect x="548" y="28" width="76" height="38" rx="8" fill="#334155"/>
+  <text x="586" y="52" fill="#ffffff" font-family="Arial" font-size="15" text-anchor="middle">A*</text>
+  <text x="662" y="52" fill="#334155" font-family="Arial" font-size="15" text-anchor="middle">Dijkstra</text>
+
+  <g transform="translate(40 84)">
+    <rect x="18" y="14" width="210" height="118" rx="14" fill="#d9ead7" opacity="0.74"/>
+    <rect x="474" y="42" width="148" height="124" rx="14" fill="#dbeafe" opacity="0.74"/>
+    <rect x="82" y="332" width="180" height="82" rx="14" fill="#fef3c7" opacity="0.74"/>
+    <rect x="416" y="322" width="132" height="88" rx="14" fill="#dcfce7" opacity="0.74"/>
+    <text x="58" y="92" fill="#64748b" font-family="Arial" font-size="13">Park</text>
+    <text x="498" y="96" fill="#64748b" font-family="Arial" font-size="13">Lake</text>
+    <text x="114" y="382" fill="#64748b" font-family="Arial" font-size="13">Market</text>
+    <text x="448" y="380" fill="#64748b" font-family="Arial" font-size="13">Campus</text>
+
+    <g stroke-linecap="round" fill="none">
+      <g stroke="#ffffff" stroke-width="10">
+        <path d="M60 70 L150 62 L255 72 L370 66 L500 78 L640 92"/>
+        <path d="M70 170 L158 162 L268 170 L388 158 L512 170 L632 178"/>
+        <path d="M62 285 L170 276 L282 292 L402 276 L520 288 L650 300"/>
+        <path d="M88 410 L192 398 L306 420 L430 396 L548 414 L660 430"/>
+        <path d="M60 70 L70 170 L62 285 L88 410"/>
+        <path d="M150 62 L158 162 L170 276 L192 398"/>
+        <path d="M255 72 L268 170 L282 292 L306 420"/>
+        <path d="M370 66 L388 158 L402 276 L430 396"/>
+        <path d="M500 78 L512 170 L520 288 L548 414"/>
+        <path d="M640 92 L632 178 L650 300 L660 430"/>
+        <path d="M268 170 L338 205 L388 158 M338 205 L402 276 L456 230 L512 170"/>
+      </g>
+      <g stroke="#9ca3af" stroke-width="5">
+        <path d="M60 70 L150 62 L255 72 L370 66 L500 78 L640 92"/>
+        <path d="M70 170 L158 162 L268 170 L388 158 L512 170 L632 178"/>
+        <path d="M62 285 L170 276 L282 292 L402 276 L520 288 L650 300"/>
+        <path d="M88 410 L192 398 L306 420 L430 396 L548 414 L660 430"/>
+        <path d="M60 70 L70 170 L62 285 L88 410"/>
+        <path d="M150 62 L158 162 L170 276 L192 398"/>
+        <path d="M255 72 L268 170 L282 292 L306 420"/>
+        <path d="M370 66 L388 158 L402 276 L430 396"/>
+        <path d="M500 78 L512 170 L520 288 L548 414"/>
+        <path d="M640 92 L632 178 L650 300 L660 430"/>
+        <path d="M268 170 L338 205 L388 158 M338 205 L402 276 L456 230 L512 170"/>
+      </g>
+      <path d="M60 70 L70 170 L158 162 L282 292 L402 276 L430 396 L548 414 L660 430" stroke="#ffffff" stroke-width="13"/>
+      <path d="M60 70 L70 170 L158 162 L282 292 L402 276 L430 396 L548 414 L660 430" stroke="#dc2626" stroke-width="8"/>
+    </g>
+
+    <g fill="#475569">
+      <circle cx="150" cy="62" r="4"/><circle cx="255" cy="72" r="4"/><circle cx="370" cy="66" r="4"/>
+      <circle cx="500" cy="78" r="4"/><circle cx="640" cy="92" r="4"/><circle cx="268" cy="170" r="4"/>
+      <circle cx="388" cy="158" r="4"/><circle cx="512" cy="170" r="4"/><circle cx="632" cy="178" r="4"/>
+      <circle cx="62" cy="285" r="4"/><circle cx="170" cy="276" r="4"/><circle cx="520" cy="288" r="4"/>
+      <circle cx="650" cy="300" r="4"/><circle cx="88" cy="410" r="4"/><circle cx="192" cy="398" r="4"/>
+      <circle cx="306" cy="420" r="4"/><circle cx="456" cy="230" r="4"/><circle cx="338" cy="205" r="4"/>
+    </g>
+    <circle cx="60" cy="70" r="16" fill="#168a4a" stroke="#ffffff" stroke-width="4"/>
+    <text x="60" y="74" fill="#ffffff" font-family="Arial" font-size="13" font-weight="700" text-anchor="middle">S</text>
+    <circle cx="660" cy="430" r="16" fill="#2563eb" stroke="#ffffff" stroke-width="4"/>
+    <text x="660" y="434" fill="#ffffff" font-family="Arial" font-size="13" font-weight="700" text-anchor="middle">E</text>
+  </g>
+
+  <g transform="translate(772 34)" font-family="Arial">
+    <text x="0" y="0" fill="#657083" font-size="13">Start</text>
+    <rect x="0" y="12" width="200" height="40" rx="6" fill="#ffffff" stroke="#a9b5c4"/>
+    <text x="12" y="38" fill="#172033" font-size="15">Node 1</text>
+    <text x="0" y="84" fill="#657083" font-size="13">Destination</text>
+    <rect x="0" y="96" width="200" height="40" rx="6" fill="#ffffff" stroke="#a9b5c4"/>
+    <text x="12" y="122" fill="#172033" font-size="15">Node 24</text>
+    <rect x="0" y="164" width="200" height="72" rx="8" fill="#f8fafc" stroke="#d3d9e1"/>
+    <text x="14" y="188" fill="#657083" font-size="13">Distance</text>
+    <text x="14" y="222" fill="#172033" font-size="30" font-weight="700">820</text>
+    <text x="0" y="276" fill="#172033" font-size="15" font-weight="700">Route</text>
+    <text x="20" y="306" fill="#334155" font-size="14">1. Node 1</text>
+    <text x="20" y="330" fill="#334155" font-size="14">2. Node 7</text>
+    <text x="20" y="354" fill="#334155" font-size="14">3. Node 8</text>
+    <text x="20" y="378" fill="#334155" font-size="14">4. Node 15</text>
+    <text x="20" y="402" fill="#334155" font-size="14">5. Node 16</text>
+    <rect x="0" y="438" width="200" height="38" rx="8" fill="#f8fafc" stroke="#a9b5c4"/>
+    <text x="100" y="462" fill="#172033" font-size="14" text-anchor="middle">Export CSV</text>
+    <rect x="0" y="486" width="200" height="38" rx="8" fill="#f8fafc" stroke="#a9b5c4"/>
+    <text x="100" y="510" fill="#172033" font-size="14" text-anchor="middle">Export JSON</text>
+    <rect x="0" y="534" width="200" height="42" rx="8" fill="#0f766e"/>
+    <text x="100" y="560" fill="#ffffff" font-size="14" text-anchor="middle">Reset Route</text>
+  </g>
+</svg>
