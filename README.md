@@ -1,104 +1,243 @@
-# C++ Map Navigation System
+# RTK-Navigation-System
 
-一个基于 C++ 的地图导航演示项目，使用 CSV 道路数据构建加权图，并实现 Dijkstra 与 A* 两种最短路径算法。项目同时提供命令行版本、SVG 路线预览和可交互的浏览器地图界面。
+`RTK-Navigation-System` 是一个基于 C++17 的 RTK / GNSS 导航系统仿真项目。
 
-## 功能特点
+项目目标不是做一个简单的路径规划 demo，而是模拟真实导航系统中的一条核心流程：将测量得到的地理坐标数据转换为机器人或自动驾驶车辆可使用的局部地图，并在地图上完成路径规划与车辆导航可视化。
 
-- 使用 `nodes.csv` 和 `edges.csv` 加载路口与道路数据
-- 基于邻接表构建双向加权图
-- 支持 Dijkstra 最短路径算法
-- 支持 A* 启发式搜索算法，启发函数为欧几里得距离
-- 支持将路径结果导出为 CSV 和 JSON
-- 支持生成带路线高亮的 SVG 地图预览
-- 提供浏览器交互界面，可点击选择起点和终点
-
-## 项目结构
+## 项目流程
 
 ```text
-NavigationProject/
-├─ include/              # 头文件
-├─ src/                  # C++ 源码
-├─ resources/            # CSV 地图数据
-├─ ui/                   # 浏览器交互地图界面
-├─ docs/                 # README 展示图
-├─ CMakeLists.txt
-└─ README.md
+RTK / GNSS 测量数据
+        -> 坐标转换
+        -> 局部地图生成
+        -> 占据栅格地图
+        -> A* 全局路径规划
+        -> 车辆导航可视化
 ```
 
-## 运行 C++ 版本
+项目从 WGS84 经纬高数据开始，将其转换为本地 ENU 米制坐标系，再生成 Occupancy Grid Map，最后使用 A* 规划路径，并通过 OpenCV 显示车辆沿路径运动的过程。
 
-进入项目目录：
+## 技术栈
+
+- C++17
+- CMake
+- OpenCV
+- Eigen
+
+macOS 可以使用 Homebrew 安装依赖：
 
 ```bash
-cd NavigationProject
+brew install cmake opencv eigen
 ```
 
-使用 CMake：
+## 构建项目
 
 ```bash
 cmake -S . -B build
 cmake --build build
-./build/navigate
 ```
 
-如果没有安装 CMake，也可以直接用 clang 编译：
+## 运行项目
+
+打开 OpenCV 动画窗口：
 
 ```bash
-clang++ -std=c++17 -Iinclude src/main.cpp src/DataLoader.cpp src/Graph.cpp src/MapRenderer.cpp -o navigate
-./navigate
+./build/RTK-Navigation-System
 ```
 
-可指定起点和终点：
+如果当前环境看不到 OpenCV 窗口，可以使用无窗口模式，只保存结果图：
 
 ```bash
-./navigate resources/nodes.csv resources/edges.csv 1 24
+./build/RTK-Navigation-System --no-gui
 ```
 
-交互式命令行模式：
-
-```bash
-./navigate --interactive
-```
-
-## 交互地图界面
-
-![Interactive map preview](NavigationProject/docs/map-ui-screenshot.svg)
-
-在 `NavigationProject` 目录下启动本地预览服务：
-
-```bash
-python3 -m http.server 4173
-```
-
-然后在浏览器打开：
+默认输出图片：
 
 ```text
-http://localhost:4173/ui/index.html
+output/navigation_result.png
 ```
 
-交互界面支持点击选择起点和终点、切换 Dijkstra/A* 算法，并导出当前路线为 CSV、JSON 或 SVG。
+指定自定义 CSV 输入和输出图片：
 
-## 数据格式
+```bash
+./build/RTK-Navigation-System --csv data/rtk_points.csv --output output/navigation_result.png
+```
 
-`resources/nodes.csv`
+## RTK 数据格式
+
+默认输入文件为：
+
+```text
+data/rtk_points.csv
+```
+
+CSV 格式如下：
 
 ```csv
-id,x,y
-1,60,70
-2,150,62
+id,latitude,longitude,height,type
+start,31.2304000,121.4737000,8.0,start
+road_00,31.2304000,121.4737000,8.0,road
+goal,31.2304719,121.4739521,8.0,goal
 ```
 
-`resources/edges.csv`
+字段含义：
 
-```csv
-from,to,distance
-1,2,92
-2,3,106
+- `id`：测量点编号
+- `latitude`：WGS84 纬度
+- `longitude`：WGS84 经度
+- `height`：高程
+- `type`：点类型
+
+支持的点类型：
+
+- `road`：道路或可通行区域测量点
+- `obstacle`：障碍物点
+- `boundary`：边界点
+- `start`：导航起点
+- `goal`：导航目标点
+
+## 项目结构
+
+```text
+src/
+  common/
+    Types.h
+  sensor/
+    RTKReader.h
+    RTKReader.cpp
+  coordinate/
+    CoordinateTransformer.h
+    CoordinateTransformer.cpp
+  map/
+    GridMap.h
+    GridMap.cpp
+    MapBuilder.h
+    MapBuilder.cpp
+  planner/
+    AStar.h
+    AStar.cpp
+  navigation/
+    Navigator.h
+    Navigator.cpp
+  visualization/
+    Viewer.h
+    Viewer.cpp
+  main.cpp
 ```
 
-## 后续扩展
+`main.cpp` 只负责组织整体流程，具体功能分别放在独立模块中。
 
-- 接入真实地图数据，如 OpenStreetMap
-- 增加道路名称、限速、拥堵权重等属性
-- 支持最短距离和最快时间两种路线策略
-- 增加算法访问节点数与耗时对比
+## 模块说明
+
+### 1. RTK 数据读取
+
+`RTKReader` 负责读取 `data/rtk_points.csv`。
+
+主要功能：
+
+- 打开 CSV 文件
+- 跳过表头
+- 解析 `id, latitude, longitude, height, type`
+- 校验字段数量、数值格式和点类型
+- 将测量点保存为 `RTKPoint`
+
+### 2. 坐标转换
+
+`CoordinateTransformer` 负责将 WGS84 经纬高转换为本地 ENU 坐标。
+
+转换流程：
+
+```text
+latitude / longitude / height
+        -> ECEF
+        -> ENU
+        -> x / y / z
+```
+
+实现细节：
+
+- 使用 WGS84 椭球参数
+- 使用 `start` 点作为 ENU 坐标原点
+- 使用 Eigen 完成矩阵旋转计算
+- 输出单位为米
+
+### 3. 地图生成
+
+`MapBuilder` 和 `GridMap` 负责生成占据栅格地图。
+
+默认参数：
+
+- 栅格分辨率：`0.5 m/cell`
+- 地图边距：`5 m`
+- 道路点扩展为可通行走廊
+- 障碍物点扩展为占据区域
+- 边界点连接为占据边界
+- 起点和终点强制设为可通行
+
+### 4. A* 路径规划
+
+`AStar` 在占据栅格地图上进行全局路径规划。
+
+特点：
+
+- 使用 8 邻域搜索
+- 支持横向、纵向和斜向移动
+- 通过检查相邻侧边格子避免斜向穿越障碍角点
+- 输出从起点到终点的 `GridCell` 路径
+
+### 5. 车辆导航仿真
+
+`Navigator` 将 A* 路径转换为车辆运动轨迹。
+
+当前版本使用轻量 Pure Pursuit 风格控制器：
+
+- 固定前视距离
+- 固定速度
+- 根据路径目标点更新车辆航向
+- 输出车辆状态序列：`x, y, yaw, velocity`
+
+### 6. 可视化
+
+`Viewer` 使用 OpenCV 显示导航结果。
+
+显示内容：
+
+- RTK 测量点
+- 道路区域
+- 障碍物
+- 边界
+- A* 规划路径
+- 车辆运动轨迹
+- 当前车辆姿态
+
+## 示例运行输出
+
+使用默认示例数据运行后，控制台会输出类似信息：
+
+```text
+Loaded RTK points: 17
+ENU origin: start lat=31.2304 lon=121.474 h=8
+Grid map: 82 x 49 cells, resolution=0.5 m/cell
+Start cell: row=15 col=16
+Goal cell: row=31 col=64
+A* path cells: 49
+Vehicle trajectory states: 212
+Saved visualization snapshot: output/navigation_result.png
+```
+
+## 当前版本说明
+
+- 当前版本是仿真与可视化系统。
+- 当前版本不连接真实 RTK / GNSS 硬件。
+- 当前版本不依赖 ROS。
+- 当前版本不实现 DWA，导航模块使用 Pure Pursuit 风格路径跟踪。
+
+## 后续可扩展方向
+
+- 读取真实 RTK 采集数据
+- 支持更多坐标系统和投影方式
+- 增加地图滤波与点云预处理
+- 加入 DWA 或 MPC 局部规划器
+- 接入 ROS 2
+- 增加实时 GNSS 数据输入
+- 增加车辆运动学模型
